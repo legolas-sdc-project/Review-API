@@ -216,6 +216,40 @@ app
   //Get reveiew meta data
   .get(getReviewsMeta);
 
+const putHelpful = (request, response) => {
+  const reviewId = parseInt(request.params.review_id)
+  // const {helpfulness} = request.body;
+  pool.query('update reviews set helpfulness = helpfulness + 1 where id = $1', [reviewId], (err, res) => {
+    if (err) {
+      throw err
+    }
+    response.status(200).send(`reviews modified with helpfulness`)
+  })
+}
+
+app
+  .route('/reviews/:review_id/helpful')
+  //Get reveiew meta data
+  .put(putHelpful);
+
+
+const putReport = (request, response) => {
+  const reviewId = parseInt(request.params.review_id)
+  // const {helpfulness} = request.body;
+  pool.query('update reviews set reported = true where id = $1', [reviewId], (err, res) => {
+    if (err) {
+      throw err
+    }
+    response.status(200).send(`reviews reported`)
+  })
+}
+
+app
+  .route('/reviews/:review_id/report')
+  //Get reveiew meta data
+  .put(putReport);
+
+
 // Start server
 app.listen(process.env.PORT || 8080, () => {
   console.log(`Server listening`)
