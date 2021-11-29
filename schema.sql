@@ -32,6 +32,8 @@ CREATE TABLE IF NOT EXISTS characteristic_review(
    value INT
 );
 
+CREATE INDEX review_product on reviews(product_id);
+
 /*
  COPY reviews(
  id,

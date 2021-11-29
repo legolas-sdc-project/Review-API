@@ -2,6 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const { pool } = require('./config')
+const axios = require('axios');
 
 const app = express()
 
@@ -89,7 +90,6 @@ const getReviewsById = (request, response) => {
 
   });
 }
-
 
 const addReviews = (req, res) => {
   const { product_id, rating, summary, body, recommend, reported, reviewer_name, reviewer_email, response, helpfulness, photos, characteristic } = req.body;
@@ -250,7 +250,125 @@ app
   .put(putReport);
 
 
-// Start server
-app.listen(process.env.PORT || 8080, () => {
-  console.log(`Server listening`)
+
+/////////////////////////////////////////////
+
+// OTHER API CALLS - Re-direct to Atelier API
+
+// Reviews
+
+app.get('/reviews', (req, res) => {
+  console.log(req.params, req.query);
+  const product_id = req.query.product_id;
+  axios({
+    url: process.env.HR_API + `/reviews?product_id=${product_id}`,
+    method: 'get',
+    headers: {
+      'Authorization': process.env.HR_API_TOKEN
+    }
+  }).then(reviewsData => {
+    res.json(reviewsData.data);
+  }).catch(error => {
+    console.log(error);
+  })
 })
+
+app.get('/reviews/meta', (req, res) => {
+  const product_id = req.query.product_id;
+  axios({
+    url: process.env.HR_API + `/reviews/meta?product_id=${product_id}`,
+    method: 'get',
+    headers: {
+      'Authorization': process.env.HR_API_TOKEN
+    }
+  }).then(reviewsData => {
+    res.json(reviewsData.data);
+  }).catch(error => {
+    console.log(error);
+  })
+})
+
+// Products
+
+app.get('/products', (req, res) => {
+  axios({
+    url: process.env.HR_API + `/products`,
+    method: 'get',
+    headers: {
+      'Authorization': process.env.HR_API_TOKEN
+    }
+  }).then(productData => {
+    res.json(productData.data);
+  }).catch(error => {
+    console.log(error);
+  })
+})
+
+app.get('/products/:product_id', (req, res) => {
+  const product_id = req.params.product_id;
+  axios({
+    url: process.env.HR_API + `/products/${product_id}`,
+    method: 'get',
+    headers: {
+      'Authorization': process.env.HR_API_TOKEN
+    }
+  }).then(productData => {
+    res.json(productData.data);
+  }).catch(error => {
+    console.log(error);
+  })
+})
+
+app.get('/products/:product_id/styles', (req, res) => {
+  const product_id = req.params.product_id;
+  axios({
+    url: process.env.HR_API + `/products/${product_id}/styles`,
+    method: 'get',
+    headers: {
+      'Authorization': process.env.HR_API_TOKEN
+    }
+  }).then(productData => {
+    res.json(productData.data);
+  }).catch(error => {
+    console.log(error);
+  })
+})
+
+app.get('/products/:product_id/related', (req, res) => {
+  const product_id = req.params.product_id;
+  axios({
+    url: process.env.HR_API + `/products/${product_id}/related`,
+    method: 'get',
+    headers: {
+      'Authorization': process.env.HR_API_TOKEN
+    }
+  }).then(productData => {
+    res.json(productData.data);
+  }).catch(error => {
+    console.log(error);
+  })
+})
+
+app.get('/qa/questions', (req, res) => {
+  const product_id = req.query.product_id;
+  axios({
+    url: process.env.HR_API + `/qa/questions?product_id=${product_id}`,
+    method: 'get',
+    headers: {
+      'Authorization': process.env.HR_API_TOKEN
+    }
+  }).then(productData => {
+    res.json(productData.data);
+  }).catch(error => {
+    console.log(error);
+  })
+})
+
+
+
+
+// Start server
+const PORT = process.env.PORT || 80;
+app.listen(PORT, () => {
+  console.log(`Server listening ${PORT}`);
+});
