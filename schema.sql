@@ -13,17 +13,23 @@ CREATE TABLE IF NOT EXISTS reviews(
    helpfulness INT
 );
 
+CREATE INDEX review_product on reviews USING HASH (product_id);
+
 CREATE TABLE IF NOT EXISTS reviews_photo(
    id SERIAL PRIMARY KEY,
    review_id INT NOT NULL REFERENCES reviews(ID),
    url TEXT NOT NULL
 );
 
+CREATE INDEX review_photo_review_id on reviews_photo USING HASH(review_id);
+
 CREATE TABLE IF NOT EXISTS characteristic(
    id SERIAL PRIMARY KEY,
    product_id INT,
    name VARCHAR(100) NOT NULL
 );
+
+CREATE INDEX characteristic_product on characteristic USING HASH(product_id);
 
 CREATE TABLE IF NOT EXISTS characteristic_review(
    id SERIAL PRIMARY KEY,
@@ -32,7 +38,9 @@ CREATE TABLE IF NOT EXISTS characteristic_review(
    value INT
 );
 
-CREATE INDEX review_product on reviews(product_id);
+CREATE INDEX characteristic_review_id on characteristic_review USING HASH(characteristic_id);
+
+CREATE INDEX characteristic_review_review_id on characteristic_review USING HASH(review_id);
 
 /*
  COPY reviews(
