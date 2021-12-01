@@ -6,6 +6,9 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
+# front-end code
+project-catwalk
+
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
@@ -30,6 +33,9 @@ coverage
 
 # Bower dependency directory (https://bower.io/)
 bower_components
+
+# rtf
+*.rtf
 
 # node-waf configuration
 .lock-wscript
